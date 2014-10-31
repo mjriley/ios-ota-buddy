@@ -42,14 +42,19 @@ otaplist()
 		#Read contents
 		BUNDLE_IDENTIFIER=$($PLIST_BUDDY "Print CFBundleIdentifier" $APP_PLIST)
 		BUNDLE_NAME=$($PLIST_BUDDY "Print CFBundleDisplayName" $APP_PLIST)
+		BUNDLE_VERSION=$($PLIST_BUDDY "Print CFBundleVersion" $APP_PLIST)
 
 		# Clean up
 		rm $APP_PLIST
+
+		# Remove previous list
+		rm -f $OTA_PLIST
 	
 		# Create .plist
 		$PLIST_BUDDY "Add :items array" $OTA_PLIST
 		$PLIST_BUDDY "Add :items:0:metadata dict" $OTA_PLIST
 		$PLIST_BUDDY "Add :items:0:metadata:bundle-identifier string $BUNDLE_IDENTIFIER" $OTA_PLIST
+		$PLIST_BUDDY "Add :items:0:metadata:bundle-version string $BUNDLE_VERSION" $OTA_PLIST
 		$PLIST_BUDDY "Add :items:0:metadata:title string $BUNDLE_NAME" $OTA_PLIST
 		$PLIST_BUDDY "Add :items:0:metadata:kind string software" $OTA_PLIST
 		$PLIST_BUDDY "Add :items:0:assets array" $OTA_PLIST
@@ -59,6 +64,7 @@ otaplist()
 		
 		echo "Created $OTA_PLIST with values:"
 		echo "Bundle identifier: $BUNDLE_IDENTIFIER"
+		echo "Bundle version: $BUNDLE_VERSION"
 		echo "Title:             $BUNDLE_NAME"
 		echo "URL to app:        $2"
 	fi
